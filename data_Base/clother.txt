@@ -1,0 +1,1 @@
+{"typeClother":"suit","name":"lady","price":"1560","color":"red","amount":"1","size":"m","sex":"woman"}

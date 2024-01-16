@@ -5,28 +5,20 @@ using System.Text.Json;
 class Program
 {
    
-/*
-   private static void OperationData()
-   {
-      throw new NotImplementedException();
-   }
-
-   private static void ProcessingData()
-   {
-      throw new NotImplementedException();
-   }
-
-   private static void addDataFromFile()
-   {
-      throw new NotImplementedException();
-   }
-*/
-   public static void addDataToJasonFile()
-      {
-         string clotherJson = JsonSerializer.Serialize( addData());
-         Console.WriteLine($"after - {clotherJson}");
-         File.WriteAllText("/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/jacket.txt", clotherJson);
+   
+   public static void addDataToJasonFile(string path)
+      {  Clother[] oldClothers = readDataFromJsonFile(path);
+         Clother[] lastestClother = addData();
+         Clother[] newClothers = oldClothers.Concat(lastestClother).ToArray();
+         string clotherJson = JsonSerializer.Serialize(newClothers);
+         File.WriteAllText(path, clotherJson);
       }
+   public static Clother[] readDataFromJsonFile(string path)
+   {
+      string clotherJson = File.ReadAllText(path);
+      Clother[] clothers = JsonSerializer.Deserialize<Clother[]>(clotherJson);
+      return clothers;
+   }
    public static Clother[] addData()
    {
       
@@ -56,6 +48,7 @@ class Program
    }
    public static void Main(string[] args)
    {     
+      string pathToJsonFile = "/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/clothers.txt";
       int menuNumber = Convert.ToInt32(Console.ReadLine());
       switch (menuNumber)
       {
@@ -63,7 +56,7 @@ class Program
             printData();
             break;
          case 2:
-            addDataToJasonFile();
+            addDataToJasonFile(pathToJsonFile);
             break;
          /*case 3:
             addDataFromFile();

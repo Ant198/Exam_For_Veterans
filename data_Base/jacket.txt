@@ -1,1 +1,0 @@
-[{"typeClother":"jacket","name":"arctic","price":"560","color":"black","amount":"560","size":"xl","sex":"man"}]
