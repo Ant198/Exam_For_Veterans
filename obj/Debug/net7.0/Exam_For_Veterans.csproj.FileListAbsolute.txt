@@ -12,3 +12,4 @@
 /home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/obj/Debug/net7.0/Exam_For_Veterans.pdb
 /home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/obj/Debug/net7.0/Exam_For_Veterans.genruntimeconfig.cache
 /home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/obj/Debug/net7.0/ref/Exam_For_Veterans.dll
+/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/obj/Debug/net7.0/Exam_For_Veterans.csproj.AssemblyReference.cache

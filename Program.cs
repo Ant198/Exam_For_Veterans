@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 class Program
 {
-   public static List<Clother> clothers = new List<Clother>();
-
+   
 /*
    private static void OperationData()
    {
@@ -21,7 +21,13 @@ class Program
       throw new NotImplementedException();
    }
 */
-   private static void addData( List<Clother> listClothers)
+   public static void addDataToJasonFile()
+      {
+         string clotherJson = JsonSerializer.Serialize( addData());
+         Console.WriteLine($"after - {clotherJson}");
+         File.WriteAllText("/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/jacket.txt", clotherJson);
+      }
+   public static Clother[] addData()
    {
       
       Console.WriteLine($"Введіть тип одягу (куртка, штани, шорти, футболка)");
@@ -33,32 +39,31 @@ class Program
       Console.WriteLine($"Введіть колір");
       string color = Console.ReadLine();
       Console.WriteLine($"Введіть кількість");
-      int amount = Convert.ToInt32(Console.ReadLine());
+      string amount = Console.ReadLine();
       Console.WriteLine($"Введіть розмір");
       string size = Console.ReadLine();
       Console.WriteLine($"Введіть стать");
       string sex = Console.ReadLine();
+
+      Clother[] clothers = {new Clother( typeClother, name, price, color, amount, size, sex)};
       
-      listClothers.Add(new Clother(new ClothingProp{ typeClother = typeClother, name = name, price = price,
-                                                     color = color, amount = amount,
-                                                     size = size, sex = sex}));      
+      return clothers;
    }
 
-   private static void printData(List<Clother> clothers)
+   private static void printData()
    {
-      Console.WriteLine(clothers[0]);
+      Console.WriteLine();
    }
    public static void Main(string[] args)
    {     
-      Console.WriteLine($"before - {clothers.Count}");
       int menuNumber = Convert.ToInt32(Console.ReadLine());
       switch (menuNumber)
       {
          case 1:
-            printData(clothers);
+            printData();
             break;
          case 2:
-            addData(clothers);
+            addDataToJasonFile();
             break;
          /*case 3:
             addDataFromFile();
@@ -75,14 +80,6 @@ class Program
          default:
             Console.WriteLine("Good Luck!");
             break;
-      }
-      for (int i = 0; i < clothers.Count; i++)
-      {
-         
-            Console.WriteLine(clothers[i].clothingProp.name);
-            
-         
-      }
-      Console.WriteLine($"after - {clothers.Count}");
+      }      
    }    
 }
