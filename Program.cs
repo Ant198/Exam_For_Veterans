@@ -45,10 +45,58 @@ class Program
             this.price = value;
          }
       }
-      public string color { get; set; }
-      public string amount { get; set; }
-      public string size { get; set; }
-      public string sex { get; set; }
+      public string color 
+       {
+         get {return this.color; } 
+         set
+         {
+            if (value.Length == 0)
+            {
+               Console.WriteLine("не введені дані");
+               return;
+            }
+            this.color = value;
+         }
+      }
+      public string amount
+      {
+         get {return this.amount; } 
+         set
+         {
+            if (value.Length == 0)
+            {
+               Console.WriteLine("не введені дані");
+               return;
+            }
+            this.amount = value;
+         }
+      }
+      public string size
+      {
+         get {return this.size; } 
+         set
+         {
+            if (value.Length == 0)
+            {
+               Console.WriteLine("не введені дані");
+               return;
+            }
+            this.size = value;
+         }
+      }
+      public string sex
+      {
+         get {return this.sex; } 
+         set
+         {
+            if (value.Length == 0)
+            {
+               Console.WriteLine("не введені дані");
+               return;
+            }
+            this.sex = value;
+         }
+      }
    }   
    public static void addDataToJasonFile(string path, MyClothers addedClother)
       {  
