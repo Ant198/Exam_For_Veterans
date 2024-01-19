@@ -1,1 +1,1 @@
-[{"typeClother":"t-shirt","name":"sexygirl","price":"560","color":"white","amount":"5","size":"s","sex":"woman"},{"typeClother":"jacket","name":"arctic","price":"880","color":"black","amount":"5","size":"XXL","sex":"man"}]
+[{"typeClother":"jacket","name":"arc","price":"6678","color":"red","amount":"5","size":"xl","sex":"man"},{"typeClother":"t-shirt","name":"summer","price":"568","color":"white","amount":"5","size":"l","sex":"woman"}]

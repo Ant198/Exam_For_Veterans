@@ -1,4 +1,4 @@
-using System;
+/*using System;
 
 public class Clother {
     public string typeClother { get; set; }
@@ -19,4 +19,4 @@ public class Clother {
         this.size = size;
         this.sex = sex;
     }    
-}
+}*/
