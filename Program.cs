@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
@@ -9,7 +10,26 @@ class Program
       {  
          try
          {
+            int count = 0;
             MyClothers[] oldClothers = readDataFromJsonFile(path);
+            for (int i = 0; i < oldClothers.Length; i++)
+            {
+               for (int j = 0; j < addedClother.Length; j++)
+               {
+                  if (
+                        oldClothers[i].type.Equals(addedClother[j].type) && oldClothers[i].name.Equals(addedClother[j].name) &&
+                        oldClothers[i].price.Equals(addedClother[j].price) && oldClothers[i].color.Equals(addedClother[j].color) &&
+                        oldClothers[i].size.Equals(addedClother[j].size) && oldClothers[i].sex.Equals(addedClother[j].sex)
+                     )
+                  {
+                     oldClothers[i].amount++;
+                  }
+                  else
+                  {
+                     
+                  }
+               }
+            }
             MyClothers[] newClothers = oldClothers.Concat(addedClother).ToArray();
             string clotherJson = JsonSerializer.Serialize(newClothers);
             File.WriteAllText(path, clotherJson);
@@ -41,12 +61,12 @@ class Program
    }
    public static MyClothers[] addData()
    {
-      MyClothers[] clother = new MyClothers[1];
+      List<MyClothers> clother = new List<MyClothers>();
       try
       {
          Console.WriteLine($"Введіть тип одягу (куртка, штани, шорти, футболка)");
-         clother[0].typeClother = Console.ReadLine();
-         if (clother[0].typeClother.Length == 0)
+         clother[0].type = Console.ReadLine();
+         if (clother[0].type.Length == 0)
          {
             throw new ArgumentException("Не вірно введені дані");
          }
@@ -69,11 +89,7 @@ class Program
             throw new ArgumentException("Не вірно введені дані");
          }
          Console.WriteLine($"Введіть кількість");
-         clother[0].amount = Console.ReadLine();
-         if (clother[0].amount.Length == 0)
-         {
-            throw new ArgumentException("Не вірно введені дані");
-         }
+         clother[0].amount = int.Parse(Console.ReadLine());
          Console.WriteLine($"Введіть розмір");
          clother[0].size = Console.ReadLine();
          if (clother[0].size.Length == 0)
@@ -96,10 +112,10 @@ class Program
       return clother;
    }
 
-   public static MyClothers[] getDataFromFile(string path)
+   public static List<MyClothers> getDataFromFile(string path)
    {
       string clotherFromFile = File.ReadAllText(path);;
-      MyClothers[] clother = JsonSerializer.Deserialize<MyClothers[]>(clotherFromFile);
+      List<MyClothers> clother = JsonSerializer.Deserialize<List<MyClothers>>(clotherFromFile);
       try
       {
          if (clotherFromFile.Length == 0 || clother == null)
@@ -133,8 +149,7 @@ class Program
             addDataToJasonFile(pathToJsonFile, addData());
             break;
           case 3:
-         addDataToJasonFile(pathToJsonFile, getDataFromFile(pathToFile));
-            ;
+            addDataToJasonFile(pathToJsonFile, getDataFromFile(pathToFile));
             break;
          /*case 4:
             ProcessingData();
