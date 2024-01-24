@@ -8,23 +8,28 @@ class Program
    {
       string pathToJsonFile = "/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/clothers.txt";
       string pathToFile = "/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/clother.txt";
+      MyClothers[] clothersMas = readDataFromJsonFile(pathToJsonFile);
       Console.WriteLine("Виберіть, що вас цікаить");
       int menuNumber = Convert.ToInt32(Console.ReadLine());
       switch (menuNumber)
       {
+         /*
          case 1:
-            printData(pathToJsonFile);
+            printData(clothersMas);
             break;
          case 2:
             addDataToJasonFile(pathToJsonFile, getData());
             break;
-          case 3:
+         
+         case 3:
             addDataToJasonFile(pathToJsonFile, getDataFromFile(pathToFile));
             break;
+         */   
          case 4:
             editingData(pathToJsonFile);
             break;
-         /*case 5:
+         /*
+         case 5:
             OperationData();
             break;
          case 6:
@@ -35,54 +40,52 @@ class Program
             break;
       }      
    }
-   private static void printData(string path)
+   private static void printData(MyClothers[] clothersMas)
    {
-      MyClothers[] clothersArray = readDataFromJsonFile(path);
-      foreach (MyClothers clother in clothersArray)
+      foreach (MyClothers clother in clothersMas)
       {
          Console.WriteLine($"{clother.type}\t{clother.name}\t{clother.price}\t{clother.color}\t{clother.amount}\t{clother.size}\t{clother.sex}");
       }
       getMenu();
    }
+   
    public static void addDataToJasonFile(string path, MyClothers[] addedClother)
    {  
       MyClothers[] oldClothers = readDataFromJsonFile(path);
       MyClothers[] newClothers = oldClothers;
-      try
+      string clotherJson ;
+      if (oldClothers.Length == 0)
       {
-         for (int i = 0; i < oldClothers.Length; i++)
+         clotherJson = JsonSerializer.Serialize(addedClother);
+         File.WriteAllText(path, clotherJson);
+      }
+      else
+      {
+         for (int i = 0; i < addedClother.Length; i++)
          {
-            for (int j = 0; j < addedClother.Length; j++)
+            for (int j = 0; j < oldClothers.Length; j++)
             {
                if (
-                  oldClothers[i].type.Equals(addedClother[j].type) && oldClothers[i].name.Equals(addedClother[j].name) &&
-                  oldClothers[i].price.Equals(addedClother[j].price) && oldClothers[i].color.Equals(addedClother[j].color) &&
-                  oldClothers[i].size.Equals(addedClother[j].size) && oldClothers[i].sex.Equals(addedClother[j].sex)
+                  oldClothers[j].type.Equals(addedClother[i].type) && oldClothers[j].name.Equals(addedClother[i].name) &&
+                  oldClothers[j].color.Equals(addedClother[i].color) && oldClothers[j].size.Equals(addedClother[i].size) && 
+                  oldClothers[j].sex.Equals(addedClother[i].sex)
                   )
                {
-                  newClothers[i].amount++;
-               }
-               else
-               {
-                  Array.Resize(ref newClothers, newClothers.Length + 1);
-                  newClothers[newClothers.Length - 1] = addedClother[j];
+                  newClothers[j].price = addedClother[i].price;
+                  newClothers[j].amount += addedClother[i].amount;
+                  break;
                }
             }
+            Array.Resize(ref newClothers, newClothers.Length + 1);
+            newClothers[newClothers.Length - 1] = addedClother[i];
          }
-            string clotherJson = JsonSerializer.Serialize(newClothers);
+            clotherJson = JsonSerializer.Serialize(newClothers);
             File.WriteAllText(path, clotherJson);
       }
-      catch (Exception e)
-      {
-         Console.WriteLine(e);
-      }
-      finally
-      {
-         Console.WriteLine("Дані успішно додані");
-      }
-      Console.WriteLine();
+       Console.WriteLine();
       getMenu();
    }
+
    public static MyClothers[] readDataFromJsonFile(string path)
    {
       string clotherJson = File.ReadAllText(path);
@@ -98,6 +101,7 @@ class Program
          return clothers;
       }
    }
+  
    public static MyClothers[] getData()
    {
       MyClothers[] clother = new MyClothers[1];
@@ -116,11 +120,7 @@ class Program
             throw new ArgumentException("Не вірно введені дані");
          }
          Console.WriteLine($"Введіть ціну");
-         clother[0].price = Console.ReadLine();
-         if (clother[0].price.Length == 0)
-         {
-            throw new ArgumentException("Не вірно введені дані");
-         }
+         clother[0].price = int.Parse(Console.ReadLine());
          Console.WriteLine($"Введіть колір");
          clother[0].color = Console.ReadLine();
          if (clother[0].color.Length == 0)
@@ -151,6 +151,7 @@ class Program
       return clother;
    }
 
+
    public static MyClothers[] getDataFromFile(string path)
    {
       string clotherFromFile = File.ReadAllText(path);
@@ -169,28 +170,29 @@ class Program
       return clother;
    }
 
+
    public static void deleteClother(string path)
    {
-      MyClothers wantedClother = searchClother();
-      MyClothers[] currentClothers = readDataFromJsonFile(path);
-      MyClothers[] newClothers = currentClothers;
+      MyClothers[] wantedClother = getData();
+      MyClothers[] clothersMas = readDataFromJsonFile(path);
+      MyClothers[] newClothersMas = clothersMas;
       bool isExist = true;
          try
          {
-            for (int i = 0; i < currentClothers.Length; i++)
+            for (int i = 0; i < clothersMas.Length; i++)
             {
                if (
-                  currentClothers[i].type.Equals(wantedClother.type) && currentClothers[i].name.Equals(wantedClother.name) &&
-                  currentClothers[i].color.Equals(wantedClother.color) && currentClothers[i].size.Equals(wantedClother.size) &&
-                  currentClothers[i].sex.Equals(wantedClother.sex)
+                  clothersMas[i].type.Equals(wantedClother[0].type) && clothersMas[i].name.Equals(wantedClother[0].name) &&
+                  clothersMas[i].color.Equals(wantedClother[0].color) && clothersMas[i].size.Equals(wantedClother[0].size) &&
+                  clothersMas[i].sex.Equals(wantedClother[0].sex)
                   )
                {
                   isExist = true;
-                  newClothers[i].amount -= searchClother.amount;
-                  if (newClothers[i].amount <= 0)
+                  newClothersMas[i].amount -= wantedClother[0].amount;
+                  if (newClothersMas[i].amount <= 0)
                   {
-                     (newClothers[i], newClothers[newClothers.Length - 1]) = (newClothers[newClothers.Length - 1], newClothers[i]);
-                     Array.Resize(ref newClothers, newClothers.Length - 1);
+                     (newClothersMas[i], newClothersMas[newClothersMas.Length - 1]) = (newClothersMas[newClothersMas.Length - 1], newClothersMas[i]);
+                     Array.Resize(ref newClothersMas, newClothersMas.Length - 1);
                   }
                   break;
                }
@@ -208,11 +210,12 @@ class Program
          {
             Console.WriteLine(e.Message);
          }
-         string clotherJson = JsonSerializer.Serialize(newClothers);
+         string clotherJson = JsonSerializer.Serialize(newClothersMas);
          File.WriteAllText(path, clotherJson);    
    
    }
-   
+
+/*
    public static MyClothers searchClother()
    {
       MyClothers clother = new MyClothers();
@@ -257,24 +260,25 @@ class Program
             
       return clother;
    }
-
+*/
    public static void editPrice(string path)
    {
-      MyClothers wantedClother = searchClother();
-      MyClothers[] currentClothers = readDataFromJsonFile(path);
+      MyClothers[] wantedClother = getData();
+      MyClothers[] clothersMas = readDataFromJsonFile(path);
       bool isExist = true;
       try
       {
-         for (int i = 0; i < currentClothers.Length; i++)
+         for (int i = 0; i < clothersMas.Length; i++)
          {
             if (
-               currentClothers[i].type.Equals(wantedClother.type) && currentClothers[i].name.Equals(wantedClother.name) &&
-               currentClothers[i].color.Equals(wantedClother.color) && currentClothers[i].size.Equals(wantedClother.size) &&
-               currentClothers[i].sex.Equals(wantedClother.sex)
+               clothersMas[i].type.Equals(wantedClother[0].type) && clothersMas[i].name.Equals(wantedClother[0].name) &&
+               clothersMas[i].color.Equals(wantedClother[0].color) && clothersMas[i].size.Equals(wantedClother[0].size) &&
+               clothersMas[i].sex.Equals(wantedClother[0].sex)
                )
             {
                isExist = true;
-               currentClothers[i].price = wantedClother.price;
+               clothersMas[i].price = wantedClother[0].price;
+               break;
             }   
             else
             {
@@ -289,23 +293,30 @@ class Program
       catch (ArgumentException e)
       {
          Console.WriteLine(e.Message);
-      }    
+      }
+      string clotherJson = JsonSerializer.Serialize(clothersMas);
+      File.WriteAllText(path, clotherJson);    
    }
+
    public static void editingData(string path)
    {
       Console.WriteLine("1 - Якщо хочете видалити модель\t2 - Якщо хочете додати модель\t3 - Змінити ціну моделі\t4 - Повернутися до основного меню");
       int number = Convert.ToInt32(Console.ReadLine());
       switch (number)
       {
+      /*
          case 1:
             deleteClother(path);
             break;
+            
          case 2:
             addDataToJasonFile(path, getData());
             break;
+      */
          case 3:
             editPrice(path);
             break;
+      
          default:
             getMenu();
             break;
@@ -313,6 +324,7 @@ class Program
       Console.WriteLine();
       getMenu();
    }
+
    public static void Main(string[] args)
    {  
       getMenu();

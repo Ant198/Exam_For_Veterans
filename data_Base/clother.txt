@@ -1,1 +1,1 @@
-[{"type":"jacket","name":"arctic","price":"5600","color":"red","amount":1,"size":"xl","sex":"man"},{"type":"jacket","name":"arc","price":"5600","color":"red","amount":4,"size":"xxl","sex":"man"} ]
+[{"type":"jacket","name":"arctic","price":5600,"color":"red","amount":1,"size":"xl","sex":"man"},{"type":"jacket","name":"arc","price":5600,"color":"red","amount":4,"size":"xxl","sex":"man"} ]
