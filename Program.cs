@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Data;
+using System.Drawing;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 class Program
 {
+   public static MyClothers[]bufferMemory;
    public static void getMenu()
    {
       string pathToJsonFile = "/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/clothers.txt";
@@ -13,10 +17,12 @@ class Program
       int menuNumber = Convert.ToInt32(Console.ReadLine());
       switch (menuNumber)
       {
-         /*
+         
          case 1:
             printData(clothersMas);
+            getMenu();
             break;
+         /*   
          case 2:
             addDataToJasonFile(pathToJsonFile, getData());
             break;
@@ -24,17 +30,18 @@ class Program
          case 3:
             addDataToJasonFile(pathToJsonFile, getDataFromFile(pathToFile));
             break;
-         */   
+           
          case 4:
             editingData(pathToJsonFile);
             break;
-         /*
+         */
          case 5:
-            OperationData();
+            operationData(clothersMas);
             break;
+         /*   
          case 6:
             break;
-           */ 
+         */ 
          default:
             Console.WriteLine("Good Luck!");
             break;
@@ -46,7 +53,6 @@ class Program
       {
          Console.WriteLine($"{clother.type}\t{clother.name}\t{clother.price}\t{clother.color}\t{clother.amount}\t{clother.size}\t{clother.sex}");
       }
-      getMenu();
    }
    
    public static void addDataToJasonFile(string path, MyClothers[] addedClother)
@@ -210,57 +216,12 @@ class Program
          {
             Console.WriteLine(e.Message);
          }
-         string clotherJson = JsonSerializer.Serialize(newClothersMas);
-         File.WriteAllText(path, clotherJson);    
+      string clotherJson = JsonSerializer.Serialize(newClothersMas);
+      File.WriteAllText(path, clotherJson);    
    
    }
 
-/*
-   public static MyClothers searchClother()
-   {
-      MyClothers clother = new MyClothers();
-      try
-      {
-         Console.WriteLine($"Введіть тип одягу (куртка, штани, шорти, футболка)");
-         clother.type = Console.ReadLine();
-         if (clother.type.Length == 0)
-         {
-            throw new ArgumentException("Не вірно введені дані");
-         }
-         Console.WriteLine($"Введіть назву");
-         clother.name = Console.ReadLine();
-         if (clother.name.Length == 0)
-         {
-            throw new ArgumentException("Не вірно введені дані");
-         }
-         Console.WriteLine($"Введіть колір");
-         clother.color = Console.ReadLine();
-         if (clother[0].color.Length == 0)
-         {
-            throw new ArgumentException("Не вірно введені дані");
-         }
-         Console.WriteLine($"Введіть розмір");
-         clother.size = Console.ReadLine();
-         if (clother.size.Length == 0)
-         {
-            throw new ArgumentException("Не вірно введені дані");
-         }
-         Console.WriteLine($"Введіть стать");
-         clother.sex = Console.ReadLine();
-         if (clother.sex.Length == 0)
-         {
-            throw new ArgumentException("Не вірно введені дані");
-         }   
-      }
-      catch (ArgumentException e)
-      {
-         Console.WriteLine(e.Message);
-         getMenu();
-      }
-            
-      return clother;
-   }
-*/
+
    public static void editPrice(string path)
    {
       MyClothers[] wantedClother = getData();
@@ -304,7 +265,6 @@ class Program
       int number = Convert.ToInt32(Console.ReadLine());
       switch (number)
       {
-      /*
          case 1:
             deleteClother(path);
             break;
@@ -312,7 +272,6 @@ class Program
          case 2:
             addDataToJasonFile(path, getData());
             break;
-      */
          case 3:
             editPrice(path);
             break;
@@ -325,8 +284,141 @@ class Program
       getMenu();
    }
 
+   public static void operationData(MyClothers[] clothersMas)
+   {
+      
+   
+      Console.WriteLine("Виберіть пункт меню");
+      Console.WriteLine("1 - Вивести одяг по типу і по статті\t2 - Вивести одяг по статі, типу, кольору\t3 - Сортувати за зростанням ціни\t4 - Сортування за спаданням ціни\t5 - скинути");
+      int menuNumber = Convert.ToInt32(Console.ReadLine());
+      
+      switch (menuNumber)
+      {
+         case 1:
+            getClothesByTypeSex(clothersMas);
+            printData(bufferMemory);
+            operationData(clothersMas);
+            break;
+         case 2:
+            getClothesByTypeSexColor(clothersMas);
+            printData(bufferMemory);
+            operationData(clothersMas);
+            break;
+         case 3:
+            upPriceSorting(bufferMemory);
+            printData(bufferMemory);
+         case 5:
+         System.Console.WriteLine(bufferMemory[0].name);
+            bufferMemory = new MyClothers[0];
+            System.Console.WriteLine(bufferMemory);
+            getMenu();
+            break;
+         default:
+            getMenu();
+            break;
+      }      
+   }
+
+   public static void getClothesByTypeSex(MyClothers[] clothers)
+   {
+      MyClothers[] getClothers = new MyClothers[0];
+      try
+      {
+         Console.WriteLine("введіть тип одягу");
+         string type = Console.ReadLine();
+         Console.WriteLine("введіть стать");
+         string sex = Console.ReadLine();
+         if (type.Length == 0 || sex.Length == 0)
+         {
+            throw new ArgumentException("Невірно введені дані");
+         }
+         for (int i = 0; i < clothers.Length; i++)
+         {
+            if (clothers[i].type.Equals(type) && clothers[i].sex.Equals(sex))
+            {
+               Array.Resize(ref getClothers, getClothers.Length + 1);
+               getClothers[getClothers.Length - 1] = clothers[i];
+            }
+         }
+         if(getClothers.Length == 0)
+         {
+            throw new ArgumentException("Шуканого одягу не існує");
+         }
+      }
+      catch (ArgumentException e)
+      {
+         Console.WriteLine(e.Message);
+      }
+      bufferMemory = getClothers;
+   }
+
+   public static void getClothesByTypeSexColor(MyClothers[] clothers)
+   {
+       MyClothers[] getClothers = new MyClothers[0];
+      try
+      {
+         Console.WriteLine("введіть тип одягу");
+         string type = Console.ReadLine();
+         Console.WriteLine("введіть стать");
+         string sex = Console.ReadLine();
+         Console.WriteLine("введіть колір");
+         string color = Console.ReadLine();
+         if (type.Length == 0 || sex.Length == 0 || color.Length == 0)
+         {
+            throw new ArgumentException("Невірно введені дані");
+         }
+         for (int i = 0; i < clothers.Length; i++)
+         {
+            if (clothers[i].type.Equals(type) && clothers[i].sex.Equals(sex) && clothers[i].color.Equals(color))
+            {
+               Array.Resize(ref getClothers, getClothers.Length + 1);
+               getClothers[getClothers.Length - 1] = clothers[i];
+            }
+         }
+         if(getClothers.Length == 0)
+         {
+            throw new ArgumentException("Шуканого одягу не існує");
+         }
+      }
+      catch (ArgumentException e)
+      {
+         Console.WriteLine(e.Message);
+      }
+      bufferMemory = getClothers;
+   }
+   
+   public static void upPriceSorting(MyClothers[] clothers)
+   {
+      if (clothers.Length == 0)
+      {
+         Console.WriteLine("Невірно введені дані");
+         getMenu();
+      }
+        
+      for (int i = 0; i < clothersMas.Length - 1; i++)
+        {
+            bool isSorted = true;
+            for (int j = 1; j < clothersMas.Length - i; j++)
+            {
+                if (clothersMas[j] < mas[j - 1])
+                {
+                    int tmp = mas[j];
+                    mas[j] = mas[j - 1];
+                    mas[j - 1] = tmp;
+                    isSorted = false;
+                }
+            }
+            if (isSorted)
+            {
+                break;
+            }
+//            PrintArray(mas);
+        }
+   
+   }
    public static void Main(string[] args)
    {  
-      getMenu();
+      getMenu();upPriceSorting(bufferMemory);
+      Console.WriteLine(bufferMemory);
    }    
 }
