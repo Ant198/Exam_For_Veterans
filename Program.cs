@@ -25,16 +25,14 @@ class Program
             break;   
          case 2:
             addDataToJasonFile(pathToJsonFile, getData());
-            break;
-         
+            break;         
          case 3:
             addDataToJasonFile(pathToJsonFile, getDataFromFile(pathToFile));
             break;
            
          case 4:
             editingData(pathToJsonFile);
-            break;
-         
+            break;         
          case 5:
             operationData(clothersMas);
             break;
@@ -60,6 +58,7 @@ class Program
    {  
       MyClothers[] oldClothers = readDataFromJsonFile(path);
       MyClothers[] newClothers = oldClothers;
+      bool isExist = true;
       string clotherJson ;
       if (oldClothers.Length == 0)
       {
@@ -80,16 +79,24 @@ class Program
                {
                   newClothers[j].price = addedClother[i].price;
                   newClothers[j].amount += addedClother[i].amount;
+                  isExist = true;
                   break;
                }
+               else
+               {
+                 isExist = false;
+               }
             }
-            Array.Resize(ref newClothers, newClothers.Length + 1);
-            newClothers[newClothers.Length - 1] = addedClother[i];
+            if (isExist == false)
+            {
+               Array.Resize(ref newClothers, newClothers.Length + 1);
+               newClothers[newClothers.Length - 1] = addedClother[i];  
+            }             
          }
             clotherJson = JsonSerializer.Serialize(newClothers);
             File.WriteAllText(path, clotherJson);
       }
-       Console.WriteLine();
+      Console.WriteLine();
       getMenu();
    }
 
@@ -319,7 +326,7 @@ class Program
             if (bufferMemory[i].sex.Equals(filterStr))
             {
                Array.Resize(ref filteredClother, filteredClother.Length + 1);
-               filteredClother[filteredClother.Length - 1] = clothers[i];
+               filteredClother[filteredClother.Length - 1] = bufferMemory[i];
             }
          }
          if(filteredClother.Length == 0)
@@ -347,7 +354,7 @@ class Program
             if (bufferMemory[i].type.Equals(filterStr))
             {
                Array.Resize(ref filteredClother, filteredClother.Length + 1);
-               filteredClother[filteredClother.Length - 1] = clothers[i];
+               filteredClother[filteredClother.Length - 1] = bufferMemory[i];
             }
          }
          if(filteredClother.Length == 0)
@@ -375,7 +382,7 @@ class Program
             if (bufferMemory[i].size.Equals(filterStr))
             {
                Array.Resize(ref filteredClother, filteredClother.Length + 1);
-               filteredClother[filteredClother.Length - 1] = clothers[i];
+               filteredClother[filteredClother.Length - 1] = bufferMemory[i];
             }
          }
          if(filteredClother.Length == 0)
@@ -403,7 +410,7 @@ class Program
             if (bufferMemory[i].color.Equals(filterStr))
             {
                Array.Resize(ref filteredClother, filteredClother.Length + 1);
-               filteredClother[filteredClother.Length - 1] = clothers[i];
+               filteredClother[filteredClother.Length - 1] = bufferMemory[i];
             }
          }
          if(filteredClother.Length == 0)
