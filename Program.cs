@@ -7,22 +7,22 @@ using System.Text.Json;
 
 class Program
 {
-   public static MyClothers[]bufferMemory;
+   public static MyClothers[]bufferMemory = new MyClothers[0];
    public static void getMenu()
    {
       string pathToJsonFile = "/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/clothers.txt";
       string pathToFile = "/home/ant/Ekreative course/basic_for_veteran/Exam_For_Veterans/data_Base/clother.txt";
       MyClothers[] clothersMas = readDataFromJsonFile(pathToJsonFile);
-      Console.WriteLine("Виберіть, що вас цікаить");
+      Console.WriteLine("Виберіть, що вас цікаить:");
+      Console.WriteLine("1 - Вивести дані на екран   2 - Ввести дані   3 - Додати дані з файлу   4 - Обробка даних ");
+      Console.WriteLine("5 - Операці з даними   6 - Зберегти дані   7 - Вийти з програми");
       int menuNumber = Convert.ToInt32(Console.ReadLine());
       switch (menuNumber)
-      {
-         
+      {         
          case 1:
             printData(clothersMas);
             getMenu();
-            break;
-         /*   
+            break;   
          case 2:
             addDataToJasonFile(pathToJsonFile, getData());
             break;
@@ -34,14 +34,13 @@ class Program
          case 4:
             editingData(pathToJsonFile);
             break;
-         */
+         
          case 5:
             operationData(clothersMas);
             break;
-         /*   
          case 6:
+            saveData(pathToJsonFile, pathToFile);
             break;
-         */ 
          default:
             Console.WriteLine("Good Luck!");
             break;
@@ -49,6 +48,8 @@ class Program
    }
    private static void printData(MyClothers[] clothersMas)
    {
+      Console.WriteLine("type\tname\tprice\tcolor\tamount\tsize\tsex");
+      Console.WriteLine();
       foreach (MyClothers clother in clothersMas)
       {
          Console.WriteLine($"{clother.type}\t{clother.name}\t{clother.price}\t{clother.color}\t{clother.amount}\t{clother.size}\t{clother.sex}");
@@ -286,39 +287,153 @@ class Program
 
    public static void operationData(MyClothers[] clothersMas)
    {
-      
-   
       Console.WriteLine("Виберіть пункт меню");
-      Console.WriteLine("1 - Вивести одяг по типу і по статті\t2 - Вивести одяг по статі, типу, кольору\t3 - Сортувати за зростанням ціни\t4 - Сортування за спаданням ціни\t5 - скинути");
+      Console.WriteLine("1 - Вивести одяг за статтю\t2 - Вивести одяг по типу\t3 - Вивести одяг за розміром\t4 - Вивести одяг за кольором\t5 - за зростанням ціни\t6 - за спаданням\t7 - скинути налаштування\t8 - вийти");
       int menuNumber = Convert.ToInt32(Console.ReadLine());
-      
-      switch (menuNumber)
-      {
-         case 1:
-            getClothesByTypeSex(clothersMas);
-            printData(bufferMemory);
-            operationData(clothersMas);
-            break;
-         case 2:
-            getClothesByTypeSexColor(clothersMas);
-            printData(bufferMemory);
-            operationData(clothersMas);
-            break;
-         case 3:
-            upPriceSorting(bufferMemory);
-            printData(bufferMemory);
-         case 5:
-         System.Console.WriteLine(bufferMemory[0].name);
-            bufferMemory = new MyClothers[0];
-            System.Console.WriteLine(bufferMemory);
-            getMenu();
-            break;
-         default:
-            getMenu();
-            break;
-      }      
+      getClothers(clothersMas, menuNumber);
+      Console.WriteLine();
+      printData(bufferMemory);
+      Console.WriteLine();
+      operationData(clothersMas);
    }
 
+   public static void getClothers(MyClothers[] clothers, int number)
+   {
+      if (bufferMemory.Length == 0)
+      {
+         bufferMemory = clothers;
+      }
+      MyClothers[] filteredClother = new MyClothers[0];
+      string filterStr;
+      if (number == 1)
+      {
+         Console.WriteLine("введіть стать");
+         filterStr = Console.ReadLine();
+         if (filterStr.Length == 0)
+         {
+            Console.WriteLine("Невірно введені дані");
+            getMenu();
+         }
+         for (int i = 0; i < bufferMemory.Length; i++)
+         {
+            if (bufferMemory[i].sex.Equals(filterStr))
+            {
+               Array.Resize(ref filteredClother, filteredClother.Length + 1);
+               filteredClother[filteredClother.Length - 1] = clothers[i];
+            }
+         }
+         if(filteredClother.Length == 0)
+         {
+            Console.WriteLine("Шуканого одягу не існує");
+            bufferMemory = new MyClothers[0];
+            getMenu();
+         }
+         else
+         {
+             bufferMemory = filteredClother;
+         }
+      }
+      if (number == 2)
+      {
+         Console.WriteLine("введіть тип одягу");
+         filterStr = Console.ReadLine();
+         if (filterStr.Length == 0)
+         {
+            Console.WriteLine("Невірно введені дані");
+            getMenu();
+         }
+         for (int i = 0; i < bufferMemory.Length; i++)
+         {
+            if (bufferMemory[i].type.Equals(filterStr))
+            {
+               Array.Resize(ref filteredClother, filteredClother.Length + 1);
+               filteredClother[filteredClother.Length - 1] = clothers[i];
+            }
+         }
+         if(filteredClother.Length == 0)
+         {
+            Console.WriteLine("Шуканого одягу не існує");
+            bufferMemory = new MyClothers[0];
+            getMenu();
+         }
+         else
+         {
+            bufferMemory = filteredClother;
+         }
+      }
+      if (number == 3)
+      {
+         Console.WriteLine("введіть розмір");
+         filterStr = Console.ReadLine();
+         if (filterStr.Length == 0)
+         {
+            Console.WriteLine("Невірно введені дані");
+            getMenu();
+         }
+         for (int i = 0; i < bufferMemory.Length; i++)
+         {
+            if (bufferMemory[i].size.Equals(filterStr))
+            {
+               Array.Resize(ref filteredClother, filteredClother.Length + 1);
+               filteredClother[filteredClother.Length - 1] = clothers[i];
+            }
+         }
+         if(filteredClother.Length == 0)
+         {
+            Console.WriteLine("Шуканого одягу не існує");
+            bufferMemory = new MyClothers[0];
+            getMenu();
+         }
+         else
+         {
+            bufferMemory = filteredClother;
+         }
+      }
+      if (number == 4)
+      {
+         Console.WriteLine("введіть колір");
+         filterStr = Console.ReadLine();
+         if (filterStr.Length == 0)
+         {
+            Console.WriteLine("Невірно введені дані");
+            getMenu();
+         }
+         for (int i = 0; i < bufferMemory.Length; i++)
+         {
+            if (bufferMemory[i].color.Equals(filterStr))
+            {
+               Array.Resize(ref filteredClother, filteredClother.Length + 1);
+               filteredClother[filteredClother.Length - 1] = clothers[i];
+            }
+         }
+         if(filteredClother.Length == 0)
+         {
+            Console.WriteLine("Шуканого одягу не існує");
+            bufferMemory = new MyClothers[0];
+            getMenu();
+         }
+         else
+         {
+            bufferMemory = filteredClother;
+         }
+      }
+      if (number == 5)
+      {
+         getUpPriceSort(clothers);
+      }
+      if (number == 6)
+      {
+         getDownPriceSort(clothers);
+      }
+      if (number == 7)
+      {
+         bufferMemory = new MyClothers[0];
+      }
+      if (number == 8)
+      {
+         getMenu();
+      }   
+   }
    public static void getClothesByTypeSex(MyClothers[] clothers)
    {
       MyClothers[] getClothers = new MyClothers[0];
@@ -387,38 +502,80 @@ class Program
       bufferMemory = getClothers;
    }
    
-   public static void upPriceSorting(MyClothers[] clothers)
+   public static void getUpPriceSort(MyClothers[] clothers)
    {
       if (clothers.Length == 0)
       {
-         Console.WriteLine("Невірно введені дані");
+         Console.WriteLine("Дані відсутні");
          getMenu();
+      }       
+      if (bufferMemory.Length == 0)
+      {
+         bufferMemory = clothers;
       }
-        
-      for (int i = 0; i < clothersMas.Length - 1; i++)
-        {
-            bool isSorted = true;
-            for (int j = 1; j < clothersMas.Length - i; j++)
+      for (int i = 0; i < bufferMemory.Length - 1; i++)
+      {
+         bool isSorted = true;
+         for (int j = 1; j < bufferMemory.Length - i; j++)
+         {
+            if (bufferMemory[j].price < bufferMemory[j - 1].price)
             {
-                if (clothersMas[j] < mas[j - 1])
-                {
-                    int tmp = mas[j];
-                    mas[j] = mas[j - 1];
-                    mas[j - 1] = tmp;
-                    isSorted = false;
-                }
+               (bufferMemory[j], bufferMemory[j - 1]) = (bufferMemory[j - 1], bufferMemory[j]);
+               isSorted = false;
             }
-            if (isSorted)
+         }
+         if (isSorted)
+         {
+            break;
+         }
+      }
+   }
+   public static void getDownPriceSort(MyClothers[] clothers)
+   {
+      if (clothers.Length == 0)
+      {
+         Console.WriteLine("Дані відсутні");
+         getMenu();
+      }       
+      if (bufferMemory.Length == 0)
+      {
+         bufferMemory = clothers;
+      }
+      for (int i = 0; i < bufferMemory.Length - 1; i++)
+      {
+         bool isSorted = true;
+         for (int j = 1; j < bufferMemory.Length - i; j++)
+         {
+            if (bufferMemory[j].price > bufferMemory[j - 1].price)
             {
-                break;
+               (bufferMemory[j], bufferMemory[j - 1]) = (bufferMemory[j - 1], bufferMemory[j]);
+               isSorted = false;
             }
-//            PrintArray(mas);
-        }
+         }
+         if (isSorted)
+         {
+            break;
+         }
+      }
+   }
    
+   public static void saveData(string path,string pathToFile)
+   {
+      Console.WriteLine("Введіть число:");
+      Console.WriteLine("1 - якщо хочете додати з клавіатури   2 - якщо хочете додати з файлу");
+      int number = Convert.ToInt32(Console.ReadLine());
+      if (number == 1)
+      {
+         addDataToJasonFile(path, getData());
+      }
+      if (number == 2)
+      {
+         addDataToJasonFile(path, getDataFromFile(pathToFile));
+      }
+      
    }
    public static void Main(string[] args)
    {  
-      getMenu();upPriceSorting(bufferMemory);
-      Console.WriteLine(bufferMemory);
+      getMenu();
    }    
 }
